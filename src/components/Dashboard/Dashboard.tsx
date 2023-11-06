@@ -6,9 +6,13 @@ import { Modal } from '../Modal/Modal'
 import { ExpensesInput } from '../Modal/ExpensesInput/ExpensesInput'
 import { IncomeInput } from '../Modal/IncomeInput/IncomeInput'
 import { useAppContext } from '@/context/AppContext'
-import { ExpensesListings } from '../Listings/ExpensesListings'
-import { IncomeListings } from '../Listings/IncomeListings'
 import { useModalContext } from '@/context/ModalContext'
+import { Listings } from '../Listings/Listings'
+import { Container } from '../Container/Container'
+import { CurrentTimePeriod } from '@/types/context'
+import { calculateTotalByTimePeriod } from '@/helpers/calculateTotalByTimePeriod'
+import { categories } from '@/data/categories'
+import { ArrowTrendingDownIcon, ArrowTrendingUpIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
 
 const tabs = [
   {
@@ -21,54 +25,90 @@ const tabs = [
   },
 ]
 
-const calculateTotalByTimePeriod = (total: number, timePeriod: string) => {
-  switch (timePeriod) {
-    case 'weekly':
-      return total / 2
-    case 'fortnightly':
-      return total
-    case 'monthly':
-      return (total * 26) / 12
-    case 'yearly':
-      return total * 26
-    default:
-      return total
-  }
-}
-
 export const DashboardEntry = () => {
-  const { totalExpensesArray, totalIncomeArray } = useAppContext()
+  const {
+    totalExpensesArray,
+    expensesArrayFilter,
+    totalIncomeArray,
+    currentTimePeriod,
+    setCurrentTimePeriod,
+    setExpensesArrayFilter,
+  } = useAppContext()
   const [currentTab, setCurrentTab] = useState<'expenses' | 'income'>('expenses')
   const { modalOpen, setModalOpen } = useModalContext()
-  const [currentTimePeriod, setCurrentTimePeriod] = useState('fortnightly')
+
   const totalExpenses = calculateTotalByTimePeriod(
     totalExpensesArray.reduce((acc, expense) => (expense.active ? acc + expense.amount : acc), 0),
     currentTimePeriod
   )
   const totalIncome = calculateTotalByTimePeriod(
-    // Find the total income by adding up all the income amounts if the income is active
     totalIncomeArray.reduce((acc, income) => (income.active ? acc + income.amount : acc), 0),
     currentTimePeriod
   )
   const totalRemaining = totalIncome - totalExpenses
 
+  const totalExpensesAsPercentage = (totalExpenses / totalIncome) * 100
+  const totalRemainingAsPercentage = (totalRemaining / totalIncome) * 100
+
   return (
-    <main>
-      <div className="min-h-screen px-4 md:px-8 md:pb-8 text-white">
-        <div className="sticky top-0 z-10 bg-black pb-4">
-          <div className="flex items-center justify-between mb-4 gap-4">
-            <h2 className="text-[50px] uppercase text-white font-bold">Planner</h2>
-            <button className="flex items-center justify-center w-12 h-12 bg-white" onClick={() => setModalOpen(true)}>
-              <PlusIcon />
+    <main className="tracking-widest">
+      <div className="min-h-screen text-white">
+        <Container className="flex items-center justify-between pt-4">
+          <h2 className="text-[20px] uppercase text-white font-italic font-bold border border-white p-2">Planner</h2>
+        </Container>
+        <div className="sticky top-0 z-10 bg-black">
+          <Container className="flex justify-between pt-4">
+            <div>
+              <div className="flex flex-col flex-1 text-white font-italic uppercase pb-4">
+                <span>Remaining</span>
+                <span
+                  className={cn('text-[40px] leading-[40px]', totalRemaining >= 0 ? 'text-green-500' : 'text-red-500')}
+                >
+                  ${totalRemaining.toFixed(2)}
+                  <span className="text-xs">{totalRemainingAsPercentage.toFixed(2)}%</span>
+                  {/* <ArrowTrendingUpIcon className="w-4 h-4 text-green-500" /> */}
+                  {/* <span></span> */}
+                </span>
+              </div>
+              <div className="pb-4">
+                <div className="flex items-center gap-2">
+                  <span className="font-italic uppercase">Income</span>
+                  <span className="text-green-500">${totalIncome.toFixed(2)}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-italic uppercase">Expenses</span>
+                  <span className="text-red-500">${totalExpenses.toFixed(2)}</span>
+                  <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
+                  <span className="text-red-500 text-xs">{totalExpensesAsPercentage.toFixed(2)}%</span>
+                </div>
+              </div>
+            </div>
+            <button className="flex items-center justify-center w-7 h-7" onClick={() => setModalOpen(true)}>
+              <PlusCircleIcon />
             </button>
-          </div>
-          <div className="flex flex-col">
-            <div className="flex">
-              <label className="flex-1 p-4 bg-black text-white">
+          </Container>
+
+          <div className="border-b border-b-stone-800">
+            <Container className="flex justify-between">
+              <div className="flex">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.value}
+                    onClick={() => setCurrentTab(tab.value as any)}
+                    className={cn(
+                      'flex gap-2 p-4 justify-between uppercase font-italic',
+                      currentTab === tab.value ? 'bg-white text-black' : 'bg-stone-800 text-white'
+                    )}
+                  >
+                    <span>{tab.name}</span>
+                  </button>
+                ))}
+              </div>
+              <label className="bg-black text-white">
                 <select
-                  className="flex-1 w-full p-4 bg-black text-white"
+                  className="w-full p-4 bg-black text-white uppercase font-italic focus:outline-none text-right"
                   value={currentTimePeriod}
-                  onChange={(e) => setCurrentTimePeriod(e.target.value)}
+                  onChange={(e) => setCurrentTimePeriod(e.target.value as CurrentTimePeriod)}
                 >
                   <option value="weekly">Weekly</option>
                   <option value="fortnightly">Fortnightly</option>
@@ -76,31 +116,13 @@ export const DashboardEntry = () => {
                   <option value="yearly">Yearly</option>
                 </select>
               </label>
-              <div className="flex flex-1 gap-2 p-4 justify-between text-white md:text-[40px] font-bold uppercase">
-                <span>Remaining</span>
-                <span className="text-green-500">${totalRemaining.toFixed(2)}</span>
-              </div>
-            </div>
-            <div className="flex">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.value}
-                  onClick={() => setCurrentTab(tab.value as any)}
-                  className={cn(
-                    'flex flex-1 gap-2 p-4 justify-between md:text-[40px] font-bold uppercase',
-                    currentTab === tab.value ? 'bg-white text-black' : 'bg-gray-800 text-white'
-                  )}
-                >
-                  <span>{tab.name}</span>
-                  <span className={cn(tab.value === 'expenses' ? 'text-red-500' : 'text-green-500')}>
-                    {tab.value === 'expenses' ? `$${totalExpenses.toFixed(2)}` : `$${totalIncome.toFixed(2)}`}
-                  </span>
-                </button>
-              ))}
-            </div>
+            </Container>
           </div>
         </div>
-        <div className="mt-8">{currentTab === 'expenses' ? <ExpensesListings /> : <IncomeListings />}</div>
+
+        <Container className="pt-4 pb-8">
+          <Listings currentTab={currentTab} />
+        </Container>
       </div>
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>

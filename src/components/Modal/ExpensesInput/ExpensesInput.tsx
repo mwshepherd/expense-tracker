@@ -1,5 +1,7 @@
+import Input from '@/components/Input/Input'
 import { useAppContext } from '@/context/AppContext'
 import { useModalContext } from '@/context/ModalContext'
+import { categories } from '@/data/categories'
 import { useEffect, useState } from 'react'
 
 export const ExpensesInput = ({ onClose }: { onClose: () => void }) => {
@@ -37,66 +39,52 @@ export const ExpensesInput = ({ onClose }: { onClose: () => void }) => {
     onClose()
   }
 
+  const handleOnDelete = () => {
+    const updatedExpensesArray = totalExpensesArray.filter((expense) => expense.id !== formState.id)
+    setTotalExpensesArray(updatedExpensesArray)
+    localStorage.setItem('app_expenses', JSON.stringify(updatedExpensesArray))
+    setFormState(defaultFormState)
+    onClose()
+  }
+
   useEffect(() => {
     if (editModalId) {
-      setFormState(totalExpensesArray.find((income) => income.id === editModalId)!)
+      setFormState(totalExpensesArray.find((expense) => expense.id === editModalId)!)
     }
   }, [editModalId, totalExpensesArray])
 
   return (
-    <div className="relative z-10 w-full max-w-md p-4 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold">{isEdit ? 'Edit' : 'Add'} Expense</h2>
+    <div className="relative z-10 w-full max-w-md p-6 bg-stone-800 text-white shadow-lg">
+      <h2 className="text-2xl font-italic uppercase">{isEdit ? 'Edit' : 'Add'} Expense</h2>
       <form className="flex flex-col gap-4 mt-4" onSubmit={handleOnSubmit}>
-        <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold">Name</span>
-          <input
-            className="p-2 border border-gray-300 rounded-lg"
-            value={formState.name}
-            onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-          />
-        </label>
-        <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold">Amount</span>
-          <input
-            className="p-2 border border-gray-300 rounded-lg"
-            type="number"
+        <Input label="Name">
+          <Input.Text value={formState.name} onChange={(e) => setFormState({ ...formState, name: e.target.value })} />
+        </Input>
+        <Input label="Amount">
+          <Input.Number
             value={formState.amount}
             onChange={(e) => setFormState({ ...formState, amount: Number(e.target.value) })}
           />
-        </label>
-        <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold">Category</span>
-          <select
-            className="p-2 border border-gray-300 rounded-lg"
+        </Input>
+        <Input label="Category">
+          <Input.Select
             value={formState.category}
             onChange={(e) => setFormState({ ...formState, category: e.target.value })}
           >
-            <option value="food">Food</option>
-            <option value="housing">Housing</option>
-            <option value="transportation">Transportation</option>
-            <option value="utilities">Utilities</option>
-            <option value="clothing">Clothing</option>
-            <option value="medical">Medical</option>
-            <option value="insurance">Insurance</option>
-            <option value="personal">Personal</option>
-            <option value="education">Education</option>
-            <option value="entertainment">Entertainment</option>
-            <option value="miscellaneous">Miscellaneous</option>
-          </select>
-        </label>
+            {categories.map((category) => (
+              <option key={category.value} value={category.value}>
+                {category.name}
+              </option>
+            ))}
+          </Input.Select>
+        </Input>
+
         <div className="flex items-center justify-end gap-2">
-          <button className="self-end px-4 py-2 text-white bg-green-500 rounded-lg">{isEdit ? 'Edit' : 'Add'}</button>
+          <button type="submit" className="self-end px-4 py-2 text-white bg-green-500 uppercase font-italic">
+            {isEdit ? 'Edit' : 'Add'}
+          </button>
           {isEdit && (
-            <button
-              className="self-end px-4 py-2 text-white bg-red-500 rounded-lg"
-              onClick={() => {
-                const updatedExpensesArray = totalExpensesArray.filter((expense) => expense.id !== formState.id)
-                setTotalExpensesArray(updatedExpensesArray)
-                localStorage.setItem('app_expenses', JSON.stringify(updatedExpensesArray))
-                setFormState(defaultFormState)
-                onClose()
-              }}
-            >
+            <button className="self-end px-4 py-2 text-white bg-red-500 uppercase font-italic" onClick={handleOnDelete}>
               Delete
             </button>
           )}

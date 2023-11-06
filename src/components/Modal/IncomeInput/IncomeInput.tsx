@@ -43,7 +43,7 @@ export const IncomeInput = ({ onClose }: { onClose: () => void }) => {
   }, [editModalId, totalIncomeArray])
 
   return (
-    <div className="relative z-10 w-full max-w-md p-4 bg-white rounded-lg shadow-lg">
+    <div className="relative z-10 w-full max-w-md p-4 bg-stone-800 text-white shadow-lg">
       <h2 className="text-2xl font-bold">{isEdit ? 'Edit' : 'Add'} Income</h2>
       <form className="flex flex-col gap-4 mt-4" onSubmit={handleOnSubmit}>
         <label className="flex flex-col gap-2">
