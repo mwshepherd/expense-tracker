@@ -6,6 +6,7 @@ import { useModalContext } from '@/context/ModalContext'
 import { expensesCategories } from '@/data/expensesCategories'
 import { ExpenseType } from '@/types/context'
 import { Listbox, Transition } from '@headlessui/react'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
 export const ExpensesInput = ({ onClose }: { onClose: () => void }) => {
   const defaultFormState: ExpenseType = {
@@ -63,7 +64,12 @@ export const ExpensesInput = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <div className="relative z-10 w-full max-w-md p-6 bg-stone-800 text-white shadow-lg">
-      <h2 className="text-2xl font-italic uppercase">{isEdit ? 'Edit' : 'Add'} Expense</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-italic uppercase">{isEdit ? 'Edit' : 'Add'} Expense</h2>
+        <button onClick={onClose} className="text-white hover:text-gray-500 w-5 h-5">
+          <XMarkIcon />
+        </button>
+      </div>
       <form className="flex flex-col gap-4 mt-4" onSubmit={handleOnSubmit}>
         <Input label="Name">
           <Input.Text value={formState.name} placeholder="e.g. Rent" onChange={(e) => setFormState({ ...formState, name: e.target.value })} />
