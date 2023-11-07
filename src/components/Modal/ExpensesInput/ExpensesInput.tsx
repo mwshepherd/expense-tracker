@@ -1,21 +1,28 @@
-import Input from '@/components/Input/Input'
+import Input from '@/components/Form/Input/Input'
+import { useEffect, useState } from 'react'
+import { Button } from '@/components/Form/Button/Button'
 import { useAppContext } from '@/context/AppContext'
 import { useModalContext } from '@/context/ModalContext'
-import { categories } from '@/data/categories'
-import { useEffect, useState } from 'react'
+import { expensesCategories } from '@/data/expensesCategories'
+import { ExpenseType } from '@/types/context'
+import { Listbox, Transition } from '@headlessui/react'
 
 export const ExpensesInput = ({ onClose }: { onClose: () => void }) => {
-  const defaultFormState = {
+  const defaultFormState: ExpenseType = {
     id: Math.random().toString(36).substr(2, 9),
     name: '',
     amount: 0,
-    category: 'food',
+    category: {
+      name: '',
+      value: '',
+    },
     active: true,
   }
   const { totalExpensesArray, setTotalExpensesArray } = useAppContext()
   const { editModalId } = useModalContext()
   const [formState, setFormState] = useState(defaultFormState)
   const isEdit = totalExpensesArray.find((expense) => expense.id === formState.id)
+  const CurrentIcon = expensesCategories.find((category) => category.value === formState.category?.value)?.icon
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -39,7 +46,8 @@ export const ExpensesInput = ({ onClose }: { onClose: () => void }) => {
     onClose()
   }
 
-  const handleOnDelete = () => {
+  const handleOnDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
     const updatedExpensesArray = totalExpensesArray.filter((expense) => expense.id !== formState.id)
     setTotalExpensesArray(updatedExpensesArray)
     localStorage.setItem('app_expenses', JSON.stringify(updatedExpensesArray))
@@ -58,35 +66,104 @@ export const ExpensesInput = ({ onClose }: { onClose: () => void }) => {
       <h2 className="text-2xl font-italic uppercase">{isEdit ? 'Edit' : 'Add'} Expense</h2>
       <form className="flex flex-col gap-4 mt-4" onSubmit={handleOnSubmit}>
         <Input label="Name">
-          <Input.Text value={formState.name} onChange={(e) => setFormState({ ...formState, name: e.target.value })} />
+          <Input.Text value={formState.name} placeholder="e.g. Rent" onChange={(e) => setFormState({ ...formState, name: e.target.value })} />
         </Input>
         <Input label="Amount">
-          <Input.Number
-            value={formState.amount}
-            onChange={(e) => setFormState({ ...formState, amount: Number(e.target.value) })}
-          />
+          <Input.Number value={formState.amount} onChange={(e) => setFormState({ ...formState, amount: Number(e.target.value) })} />
         </Input>
-        <Input label="Category">
-          <Input.Select
-            value={formState.category}
-            onChange={(e) => setFormState({ ...formState, category: e.target.value })}
-          >
-            {categories.map((category) => (
-              <option key={category.value} value={category.value}>
-                {category.name}
-              </option>
-            ))}
-          </Input.Select>
-        </Input>
+        <Listbox
+          value={formState.category.value}
+          onChange={(category) => {
+            const selectedCategory = expensesCategories.find((cat) => cat.value === category)!
+
+            setFormState({
+              ...formState,
+              category: {
+                name: selectedCategory.name,
+                value: selectedCategory.value,
+              },
+            })
+          }}
+        >
+          {({ open }) => (
+            <>
+              <Listbox.Label as="label" className="flex flex-col gap-2">
+                <span className="text-sm uppercase">Category</span>
+              </Listbox.Label>
+              <div className="relative">
+                <Listbox.Button className="relative w-full py-2 text-left bg-transparent border-b border-gray-500 cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    {CurrentIcon && <CurrentIcon className="w-5 h-5 text-white" aria-hidden="true" />}
+                    <span className="block truncate font-italic uppercase">{formState.category?.name || 'Select Category'}</span>
+                  </div>
+                  <span className="absolute inset-y-0 right-0 flex items-center pointer-events-none">
+                    <svg className="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        // eslint-disable-next-line max-len
+                        d="M10.7071 13.7071C10.3166 14.0976 9.68342 14.0976 9.29289 13.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L10 11.5858L13.2929 8.29289C13.6834 7.90237 14.3166 7.90237 14.7071 8.29289C15.0976 8.68342 15.0976 9.31658 14.7071 9.70711L10.7071 13.7071Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </Listbox.Button>
+                <Transition
+                  show={open}
+                  enter="transition duration-100 ease-out"
+                  enterFrom="transform scale-95 opacity-0"
+                  enterTo="transform scale-100 opacity-100"
+                  leave="transition duration-75 ease-out"
+                  leaveFrom="transform scale-100 opacity-100"
+                  leaveTo="transform scale-95 opacity-0"
+                >
+                  <Listbox.Options className="absolute top-full w-full mt-1 overflow-auto text-base bg-stone-700 shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    {expensesCategories.map((category) => (
+                      <Listbox.Option
+                        key={category.value}
+                        value={category.value}
+                        className="flex justify-between gap-2 cursor-pointer select-none relative py-3 px-2 hover:bg-stone-600"
+                      >
+                        {({ selected, active }) => {
+                          return (
+                            <>
+                              <div className="flex gap-2">
+                                {category.icon && <category.icon className="w-5 h-5 text-white" aria-hidden="true" />}
+                                <span className={`${selected ? 'font-medium' : 'font-normal'} block truncate uppercase font-italic`}>{category.name}</span>
+                              </div>
+                              {selected && (
+                                <span className={`${active ? 'text-amber-600' : 'text-amber-600'} flex items-center pl-3`}>
+                                  <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path
+                                      fillRule="evenodd"
+                                      clipRule="evenodd"
+                                      // eslint-disable-next-line max-len
+                                      d="M10.7071 13.7071C10.3166 14.0976 9.68342 14.0976 9.29289 13.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L10 11.5858L13.2929 8.29289C13.6834 7.90237 14.3166 7.90237 14.7071 8.29289C15.0976 8.68342 15.0976 9.31658 14.7071 9.70711L10.7071 13.7071Z"
+                                      fill="currentColor"
+                                    />
+                                  </svg>
+                                </span>
+                              )}
+                            </>
+                          )
+                        }}
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </Transition>
+              </div>
+            </>
+          )}
+        </Listbox>
 
         <div className="flex items-center justify-end gap-2">
-          <button type="submit" className="self-end px-4 py-2 text-white bg-green-500 uppercase font-italic">
+          <Button type="submit" style="success">
             {isEdit ? 'Edit' : 'Add'}
-          </button>
+          </Button>
           {isEdit && (
-            <button className="self-end px-4 py-2 text-white bg-red-500 uppercase font-italic" onClick={handleOnDelete}>
+            <Button style="danger" onClick={handleOnDelete}>
               Delete
-            </button>
+            </Button>
           )}
         </div>
       </form>

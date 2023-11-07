@@ -1,14 +1,6 @@
-import {
-  ShoppingCartIcon,
-  HomeModernIcon,
-  BoltIcon,
-  MusicalNoteIcon,
-  BuildingLibraryIcon,
-  ScaleIcon,
-  HeartIcon,
-} from '@heroicons/react/24/outline'
+import { ShoppingCartIcon, HomeModernIcon, BoltIcon, MusicalNoteIcon, BuildingLibraryIcon, ScaleIcon, HeartIcon, TruckIcon, NoSymbolIcon } from '@heroicons/react/24/outline'
 
-export const categories = [
+export const expensesCategories = [
   {
     name: 'Food',
     value: 'food',
@@ -22,6 +14,7 @@ export const categories = [
   {
     name: 'Transportation',
     value: 'transportation',
+    icon: TruckIcon,
   },
   {
     name: 'Utilities',
@@ -31,6 +24,7 @@ export const categories = [
   {
     name: 'Clothing',
     value: 'clothing',
+    icon: NoSymbolIcon,
   },
   {
     name: 'Medical',

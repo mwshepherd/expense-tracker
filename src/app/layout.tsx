@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ overflow: 'hidden' }}>
       <body className={cn(universalSans.variable, universalItalic.variable, 'font-sans')}>{children}</body>
     </html>
   )
