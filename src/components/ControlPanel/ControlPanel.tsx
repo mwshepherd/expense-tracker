@@ -21,7 +21,7 @@ export const ControlPanel = ({ currentTab, setCurrentTab }: { currentTab: 'expen
             <button className="w-7 h-7 text-white" onClick={() => setModalOpen(true)}>
               <PlusCircleIcon />
             </button>
-            <h2 className="-mt-1 md:mt-0 text-xs uppercase text-white font-italic border border-white p-1">Planner</h2>
+            <h2 className="-mt-1 md:mt-0 text-xs uppercase text-white font-italic border border-white p-1">Tracker</h2>
           </div>
         </div>
       </Container>
