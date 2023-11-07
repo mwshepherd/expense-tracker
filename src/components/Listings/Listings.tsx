@@ -7,7 +7,6 @@ import { CategoryFilters } from '../Filters/CategoryFilters'
 
 export const Listings = ({ currentTab }: { currentTab: 'expenses' | 'income' }) => {
   const { controlPanelRef } = useAppContext()
-  console.log('controlPanelRef', controlPanelRef)
   const { setModalOpen, setEditModalId } = useModalContext()
   const { totalExpensesArray, expensesArrayFilters, totalIncomeArray, incomeArrayFilters, setTotalExpensesArray, setTotalIncomeArray } = useAppContext()
 
