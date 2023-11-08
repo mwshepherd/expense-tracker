@@ -2,12 +2,12 @@ import cn from 'classnames'
 
 export const Button = ({
   type,
-  style,
+  style = 'success',
   children,
   onClick,
 }: {
   type?: 'submit' | 'reset'
-  style: 'success' | 'danger'
+  style?: 'success' | 'danger'
   children: React.ReactNode
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }) => {

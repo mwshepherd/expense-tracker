@@ -27,9 +27,9 @@ export const Listing = ({
   const percentageColour = currentTab === 'expenses' ? 'bg-red-300' : 'bg-green-300'
 
   return (
-    <div className={cn('flex items-center justify-between gap-4 p-4 bg-stone-800', entry.active ? 'text-white' : 'text-gray-600')}>
+    <div className={cn('flex items-center justify-between gap-4 p-2 md:p-4 bg-stone-800', entry.active ? 'text-white' : 'text-gray-600')}>
       <div className="flex w-full gap-4 items-center">
-        <div className="flex flex-col md:flex-row w-full md:items-center gap-2">
+        <div className="flex flex-col md:flex-row w-full md:items-center gap-1">
           <div className="flex flex-1 items-center justify-between">
             <div className="flex items-center gap-2 md:gap-4">
               {entry.category && Icon && (
@@ -59,7 +59,7 @@ export const Listing = ({
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center justify-end gap-4">
+      <div className="flex flex-col md:flex-row items-center justify-end gap-2 md:gap-4">
         <button onClick={toggleActive} className="focus:outline-none w-5 h-5">
           <CheckCircleIcon className={entry.active ? 'text-green-300' : 'text-gray-400'} />
         </button>

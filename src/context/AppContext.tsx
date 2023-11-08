@@ -7,12 +7,13 @@ const initialState: AppContextType = {
   expensesArrayFilters: [],
   incomeArrayFilters: [],
   currentTimePeriod: 'fortnightly',
-  controlPanelRef: null,
+  isLoading: true,
   setTotalExpensesArray: () => {},
   setTotalIncomeArray: () => {},
   setExpensesArrayFilters: () => {},
   setIncomeArrayFilters: () => {},
   setCurrentTimePeriod: () => {},
+  setIsLoading: () => {},
 }
 
 export const AppContext = createContext<AppContextType>(initialState)
@@ -24,7 +25,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [totalIncomeArray, setTotalIncomeArray] = useState<IncomeType[]>([])
   const [incomeArrayFilters, setIncomeArrayFilters] = useState<string[]>([])
   const [currentTimePeriod, setCurrentTimePeriod] = useState<CurrentTimePeriod>('fortnightly')
-  const controlPanelRef = useRef<HTMLDivElement>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const expenses = localStorage.getItem('app_expenses')
@@ -32,6 +33,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (expenses) setTotalExpensesArray(JSON.parse(expenses))
     if (income) setTotalIncomeArray(JSON.parse(income))
+
+    setIsLoading(false)
   }, [])
 
   const state = {
@@ -40,12 +43,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     expensesArrayFilters,
     incomeArrayFilters,
     currentTimePeriod,
-    controlPanelRef,
+    isLoading,
     setTotalExpensesArray,
     setTotalIncomeArray,
     setExpensesArrayFilters,
     setIncomeArrayFilters,
     setCurrentTimePeriod,
+    setIsLoading,
   }
 
   return <AppContext.Provider value={state}>{children}</AppContext.Provider>

@@ -3,12 +3,12 @@ import { useModalContext } from '@/context/ModalContext'
 import { ExpenseType, IncomeType } from '@/types/context'
 import { Listing } from './Listing'
 import { Container } from '../Container/Container'
-import { CategoryFilters } from '../Filters/CategoryFilters'
+import { Loader } from '../Loader/Loader'
+import { EmptyState } from './EmptyState'
 
 export const Listings = ({ currentTab }: { currentTab: 'expenses' | 'income' }) => {
-  const { controlPanelRef } = useAppContext()
   const { setModalOpen, setEditModalId } = useModalContext()
-  const { totalExpensesArray, expensesArrayFilters, totalIncomeArray, incomeArrayFilters, setTotalExpensesArray, setTotalIncomeArray } = useAppContext()
+  const { isLoading, totalExpensesArray, expensesArrayFilters, totalIncomeArray, incomeArrayFilters, setTotalExpensesArray, setTotalIncomeArray } = useAppContext()
 
   const expensesArrayToMap = expensesArrayFilters.length ? totalExpensesArray.filter((entry) => expensesArrayFilters.includes(entry.category.value)) : totalExpensesArray
   const incomeArrayToMap = incomeArrayFilters.length ? totalIncomeArray.filter((entry) => incomeArrayFilters.includes(entry.category.value)) : totalIncomeArray
@@ -33,16 +33,12 @@ export const Listings = ({ currentTab }: { currentTab: 'expenses' | 'income' }) 
     localStorage.setItem(currentTab === 'expenses' ? 'app_expenses' : 'app_income', JSON.stringify(updatedArray))
   }
 
-  return (
-    <Container
-      className="pb-36"
-      style={{
-        minHeight: `calc(100vh - ${controlPanelRef?.current?.clientHeight}px)`,
-      }}
-    >
-      {/* <CategoryFilters currentTab={currentTab} arrayToRender={currentTab === 'expenses' ? totalExpensesArray : totalIncomeArray} /> */}
+  if (isLoading) return <Loader />
+  if (!arrayToRender.length) return <EmptyState currentTab={currentTab} />
 
-      <div className="flex flex-col gap-4 pt-4">
+  return (
+    <Container className="pb-8">
+      <div className="flex flex-col gap-4 pt-4 w-full h-full">
         {arrayToRender.map((entry: ExpenseType | IncomeType) => (
           <Listing
             key={entry.id}

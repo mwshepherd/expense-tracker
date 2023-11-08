@@ -4,16 +4,16 @@ import { useAppContext } from '@/context/AppContext'
 import { useModalContext } from '@/context/ModalContext'
 import { Summary } from './Summary/Summary'
 import { Tabs } from './Tabs/Tabs'
-import { PeriodFilter } from './PeriodFilter/PeriodFilter'
+import PeriodFilter from './PeriodFilter/PeriodFilter'
 import { ListingsHeader } from '../Listings/ListingsHeader'
 import { CategoryFilters } from '../Filters/CategoryFilters'
 
 export const ControlPanel = ({ currentTab, setCurrentTab }: { currentTab: 'expenses' | 'income'; setCurrentTab: (tab: 'expenses' | 'income') => void }) => {
-  const { totalExpensesArray, totalIncomeArray, controlPanelRef, currentTimePeriod, setCurrentTimePeriod } = useAppContext()
+  const { totalExpensesArray, totalIncomeArray, currentTimePeriod, setCurrentTimePeriod } = useAppContext()
   const { setModalOpen } = useModalContext()
 
   return (
-    <div className="sticky top-0 z-10 bg-black" ref={controlPanelRef}>
+    <div className="sticky top-0 z-10 bg-black">
       <Container className="flex justify-between pt-4">
         <Summary />
         <div className="flex items-start">

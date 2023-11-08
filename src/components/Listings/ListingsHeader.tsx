@@ -10,6 +10,7 @@ export const ListingsHeader = () => {
   const totalExpenses = expensesArrayToMap.reduce((acc, expense) => (expense.active ? acc + calculateEntryTotal(expense.amount, expense.frequency, currentTimePeriod) : acc), 0)
   const totalExpenesLabel = totalExpenses.toFixed(2)
   const percentageOfIcome = Math.round((totalExpenses / totalIncome) * 100 * 100) / 100
+  const percentageIndicator = Number.isFinite(percentageOfIcome) ? percentageOfIcome : 0
   const percentageDisplay = Number.isFinite(percentageOfIcome) ? `${percentageOfIcome}%` : '0%'
   const headerLabel = expensesArrayFilters.length ? 'Filtered Expenses' : 'All Expenses'
 
@@ -28,7 +29,7 @@ export const ListingsHeader = () => {
 
             <div className="flex-1 flex items-center justify-center gap-4">
               <div className="w-full md:w-1/2 h-1 bg-gray-500">
-                <div style={{ width: `${percentageOfIcome >= 100 ? 100 : percentageOfIcome}%` }} className={cn('h-full transition-all duration-500', 'bg-red-300')}></div>
+                <div style={{ width: `${percentageIndicator >= 100 ? 100 : percentageIndicator}%` }} className={cn('h-full transition-all duration-500', 'bg-red-300')}></div>
               </div>
               <span className="text-xs font-italic w-16 md:w-12 text-right">{percentageDisplay}</span>
             </div>

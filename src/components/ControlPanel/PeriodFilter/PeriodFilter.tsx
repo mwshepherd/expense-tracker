@@ -1,4 +1,4 @@
-import cn from 'classnames'
+import { memo } from 'react'
 import { CurrentTimePeriod } from '@/types/context'
 import { Listbox, Transition } from '@headlessui/react'
 import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
@@ -11,13 +11,7 @@ const options = [
   { label: 'Yearly', value: 'yearly' },
 ]
 
-export const PeriodFilter = ({
-  currentTimePeriod,
-  setCurrentTimePeriod,
-}: {
-  currentTimePeriod: CurrentTimePeriod
-  setCurrentTimePeriod: (timePeriod: CurrentTimePeriod) => void
-}) => {
+const PeriodFilter = ({ currentTimePeriod, setCurrentTimePeriod }: { currentTimePeriod: CurrentTimePeriod; setCurrentTimePeriod: (timePeriod: CurrentTimePeriod) => void }) => {
   return (
     <Listbox value={currentTimePeriod} onChange={setCurrentTimePeriod}>
       {({ open }) => (
@@ -49,3 +43,5 @@ export const PeriodFilter = ({
     </Listbox>
   )
 }
+
+export default memo(PeriodFilter)
