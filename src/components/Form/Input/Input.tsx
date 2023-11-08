@@ -1,6 +1,6 @@
 const Input = ({ label, children }: { label: string; children: React.ReactNode }) => {
   return (
-    <label className="flex flex-col gap-2">
+    <label className="flex flex-1 flex-col gap-2">
       <span className="text-sm uppercase">{label}</span>
       {children}
     </label>
@@ -28,7 +28,7 @@ Input.Number = Number
 
 const Select = ({ value, onChange, children }: { value: string; onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; children: React.ReactNode }) => {
   return (
-    <select className="py-2 border-b border-gray-500 bg-transparent focus:outline-none focus:border-gray-300 uppercase" value={value} onChange={onChange}>
+    <select className="py-2 border-b border-gray-500 bg-transparent focus:outline-none focus:border-gray-300 font-italic uppercase" value={value} onChange={onChange}>
       {children}
     </select>
   )

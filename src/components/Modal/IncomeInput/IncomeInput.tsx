@@ -4,7 +4,7 @@ import { Button } from '@/components/Form/Button/Button'
 import { useAppContext } from '@/context/AppContext'
 import { useModalContext } from '@/context/ModalContext'
 import { incomeCategories } from '@/data/incomeCategories'
-import { IncomeType } from '@/types/context'
+import { CurrentTimePeriod, IncomeType } from '@/types/context'
 import { Listbox, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
@@ -13,6 +13,7 @@ export const IncomeInput = ({ onClose }: { onClose: () => void }) => {
     id: Math.random().toString(36).substr(2, 9),
     name: '',
     amount: 0,
+    frequency: 'fortnightly',
     category: {
       name: '',
       value: '',
@@ -74,9 +75,20 @@ export const IncomeInput = ({ onClose }: { onClose: () => void }) => {
         <Input label="Name">
           <Input.Text value={formState.name} placeholder="e.g. Salary" onChange={(e) => setFormState({ ...formState, name: e.target.value })} />
         </Input>
-        <Input label="Amount">
-          <Input.Number value={formState.amount} onChange={(e) => setFormState({ ...formState, amount: Number(e.target.value) })} />
-        </Input>
+        <div className="flex justify-between gap-4">
+          <Input label="Amount">
+            <Input.Number value={formState.amount} onChange={(e) => setFormState({ ...formState, amount: Number(e.target.value) })} />
+          </Input>
+          <Input label="Frequency">
+            <Input.Select value={formState.frequency} onChange={(e) => setFormState({ ...formState, frequency: e.target.value as CurrentTimePeriod })}>
+              <option value="weekly">Weekly</option>
+              <option value="fortnightly">Fortnightly</option>
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="yearly">Yearly</option>
+            </Input.Select>
+          </Input>
+        </div>
         <Listbox
           value={formState.category.value}
           onChange={(category) => {

@@ -7,6 +7,7 @@ const options = [
   { label: 'Weekly', value: 'weekly' },
   { label: 'Fortnightly', value: 'fortnightly' },
   { label: 'Monthly', value: 'monthly' },
+  { label: 'Quarterly', value: 'quarterly' },
   { label: 'Yearly', value: 'yearly' },
 ]
 

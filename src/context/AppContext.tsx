@@ -30,13 +30,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const expenses = localStorage.getItem('app_expenses')
     const income = localStorage.getItem('app_income')
 
-    if (expenses) {
-      setTotalExpensesArray(JSON.parse(expenses))
-    }
-
-    if (income) {
-      setTotalIncomeArray(JSON.parse(income))
-    }
+    if (expenses) setTotalExpensesArray(JSON.parse(expenses))
+    if (income) setTotalIncomeArray(JSON.parse(income))
   }, [])
 
   const state = {

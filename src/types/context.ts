@@ -1,4 +1,4 @@
-export type CurrentTimePeriod = 'weekly' | 'fortnightly' | 'monthly' | 'yearly'
+export type CurrentTimePeriod = 'weekly' | 'fortnightly' | 'monthly' | 'quarterly' | 'yearly'
 
 export type AppContextType = {
   totalExpensesArray: ExpenseType[]
@@ -18,6 +18,7 @@ export type ExpenseType = {
   id: string
   name: string
   amount: number
+  frequency: CurrentTimePeriod
   category: Category
   active: boolean
 }
@@ -26,6 +27,7 @@ export type IncomeType = {
   id: string
   name: string
   amount: number
+  frequency: CurrentTimePeriod
   category: Category
   active: boolean
 }

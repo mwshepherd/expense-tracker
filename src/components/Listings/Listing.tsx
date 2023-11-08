@@ -1,7 +1,7 @@
 import cn from 'classnames'
 import { useAppContext } from '@/context/AppContext'
 import { expensesCategories } from '@/data/expensesCategories'
-import { calculateTotalByTimePeriod } from '@/helpers/calculateTotalByTimePeriod'
+import { calculateEntryTotal } from '@/helpers/calculateEntryTotal'
 import { ExpenseType, IncomeType } from '@/types/context'
 import { CheckCircleIcon, PencilIcon } from '@heroicons/react/24/outline'
 import { incomeCategories } from '@/data/incomeCategories'
@@ -18,10 +18,10 @@ export const Listing = ({
   onEdit: () => void
 }) => {
   const { totalIncomeArray, currentTimePeriod } = useAppContext()
-  const totalIncome = totalIncomeArray.reduce((acc, income) => (income.active ? acc + income.amount : acc), 0)
-  const percentageOfIcome = entry.active ? Math.round((entry.amount / totalIncome) * 100 * 100) / 100 : 0
+  const totalIncome = totalIncomeArray.reduce((acc, income) => (income.active ? acc + calculateEntryTotal(income.amount, income.frequency, currentTimePeriod) : acc), 0)
+  const percentageOfIcome = entry.active ? Math.round((calculateEntryTotal(entry.amount, entry.frequency, currentTimePeriod) / totalIncome) * 100 * 100) / 100 : 0
   const percentageDisplay = Number.isFinite(percentageOfIcome) ? `${percentageOfIcome}%` : '0%'
-  const entryAmount = calculateTotalByTimePeriod(entry.amount, currentTimePeriod).toFixed(2)
+  const calculatedAmount = calculateEntryTotal(entry.amount, entry.frequency, currentTimePeriod).toFixed(2)
   const currentCategories = currentTab === 'expenses' ? expensesCategories : incomeCategories
   const Icon = currentCategories.find((category) => category.value === entry.category.value)?.icon
   const percentageColour = currentTab === 'expenses' ? 'bg-red-300' : 'bg-green-300'
@@ -44,7 +44,7 @@ export const Listing = ({
               </div>
             </div>
 
-            <span className="text-sm font-italic">${entryAmount}</span>
+            <span className="text-sm font-italic">${calculatedAmount}</span>
           </div>
 
           <div className="flex-1 flex items-center justify-center gap-4">

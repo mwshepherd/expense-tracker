@@ -1,21 +1,13 @@
 import cn from 'classnames'
 import { useAppContext } from '@/context/AppContext'
-import { calculateTotalByTimePeriod } from '@/helpers/calculateTotalByTimePeriod'
+import { calculateEntryTotal } from '@/helpers/calculateEntryTotal'
 import { ArrowTrendingDownIcon, ArrowTrendingUpIcon } from '@heroicons/react/24/outline'
 
 export const Summary = () => {
   const { totalExpensesArray, totalIncomeArray, currentTimePeriod } = useAppContext()
-
-  const totalExpenses = calculateTotalByTimePeriod(
-    totalExpensesArray.reduce((acc, expense) => (expense.active ? acc + expense.amount : acc), 0),
-    currentTimePeriod
-  )
-  const totalIncome = calculateTotalByTimePeriod(
-    totalIncomeArray.reduce((acc, income) => (income.active ? acc + income.amount : acc), 0),
-    currentTimePeriod
-  )
+  const totalExpenses = totalExpensesArray.reduce((acc, expense) => (expense.active ? acc + calculateEntryTotal(expense.amount, expense.frequency, currentTimePeriod) : acc), 0)
+  const totalIncome = totalIncomeArray.reduce((acc, income) => (income.active ? acc + calculateEntryTotal(income.amount, income.frequency, currentTimePeriod) : acc), 0)
   const totalRemaining = totalIncome - totalExpenses
-
   const totalExpensesAsPercentage = (totalExpenses / totalIncome) * 100
   const totalRemainingAsPercentage = (totalRemaining / totalIncome) * 100
   const totalExpensesAsPercentageLabel = Number.isFinite(totalExpensesAsPercentage) ? totalExpensesAsPercentage.toFixed(2) : 0
