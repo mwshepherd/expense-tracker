@@ -26,8 +26,43 @@ export const Listing = ({
   const Icon = currentCategories.find((category) => category.value === entry.category.value)?.icon
   const percentageColour = currentTab === 'expenses' ? 'bg-red-300' : 'bg-green-300'
 
+  // const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+  //   console.log('e', e)
+  // }
+
+  // const handleOnDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault()
+
+  //   const hoverTarget = (e.target as HTMLDivElement).closest('#entry') as HTMLDivElement
+
+  //   if (hoverTarget) hoverTarget.style.background = 'red'
+  // }
+
+  // const handleOnDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault()
+
+  //   const hoverTarget = (e.target as HTMLDivElement).closest('#entry') as HTMLDivElement
+
+  //   hoverTarget.removeAttribute('style')
+  // }
+
+  // const handleOnDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault()
+
+  //   const target = (e.target as HTMLDivElement).closest('#entry') as HTMLDivElement
+  //   target.removeAttribute('style')
+  // }
+
   return (
-    <div className={cn('flex items-center justify-between gap-4 p-2 md:p-4 bg-stone-800', entry.active ? 'text-white' : 'text-gray-600')}>
+    <div
+      id="entry"
+      // draggable={true}
+      // onDragStart={handleDragStart}
+      // onDragOver={handleOnDragOver}
+      // onDragLeave={handleOnDragLeave}
+      // onDragEnd={handleOnDragEnd}
+      className={cn('flex items-center justify-between gap-4 p-2 md:p-4 bg-stone-800', entry.active ? 'text-white' : 'text-gray-600')}
+    >
       <div className="flex w-full gap-4 items-center">
         <div className="flex flex-col md:flex-row w-full md:items-center gap-1">
           <div className="flex flex-1 items-center justify-between">
@@ -59,7 +94,7 @@ export const Listing = ({
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center justify-end gap-2 md:gap-4">
+      <div className="flex flex-row items-center justify-end gap-3 md:gap-4">
         <button onClick={toggleActive} className="focus:outline-none w-5 h-5">
           <CheckCircleIcon className={entry.active ? 'text-green-300' : 'text-gray-400'} />
         </button>

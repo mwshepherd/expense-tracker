@@ -7,12 +7,14 @@ const initialState: AppContextType = {
   expensesArrayFilters: [],
   incomeArrayFilters: [],
   currentTimePeriod: 'fortnightly',
+  currentSortOrder: 'default',
   isLoading: true,
   setTotalExpensesArray: () => {},
   setTotalIncomeArray: () => {},
   setExpensesArrayFilters: () => {},
   setIncomeArrayFilters: () => {},
   setCurrentTimePeriod: () => {},
+  setCurrentSortOrder: () => {},
   setIsLoading: () => {},
 }
 
@@ -25,6 +27,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [totalIncomeArray, setTotalIncomeArray] = useState<IncomeType[]>([])
   const [incomeArrayFilters, setIncomeArrayFilters] = useState<string[]>([])
   const [currentTimePeriod, setCurrentTimePeriod] = useState<CurrentTimePeriod>('fortnightly')
+  const [currentSortOrder, setCurrentSortOrder] = useState<string>('default')
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -43,12 +46,14 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     expensesArrayFilters,
     incomeArrayFilters,
     currentTimePeriod,
+    currentSortOrder,
     isLoading,
     setTotalExpensesArray,
     setTotalIncomeArray,
     setExpensesArrayFilters,
     setIncomeArrayFilters,
     setCurrentTimePeriod,
+    setCurrentSortOrder,
     setIsLoading,
   }
 

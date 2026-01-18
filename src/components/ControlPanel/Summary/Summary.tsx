@@ -33,7 +33,6 @@ export const Summary = () => {
       <div className="pb-1 md:pb-4">
         <div className="flex items-center gap-2">
           <span className="font-italic uppercase">Income</span>
-          {/* <span className="text-green-500">${totalIncome.toFixed(2)}</span> */}
           <span className="text-green-500">
             $<NumAnim n={totalIncome} />
           </span>

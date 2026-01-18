@@ -26,7 +26,7 @@ export const calculateEntryTotal = (total: number, entryFrequency: CurrentTimePe
         case 'quarterly':
           return (total * 4) / 26
         case 'yearly':
-          return total * 26
+          return total / 26
       }
     case 'monthly':
       switch (entryFrequency) {
@@ -39,7 +39,7 @@ export const calculateEntryTotal = (total: number, entryFrequency: CurrentTimePe
         case 'quarterly':
           return (total * 4) / 12
         case 'yearly':
-          return total * 12
+          return total / 12
       }
     case 'quarterly':
       switch (entryFrequency) {
